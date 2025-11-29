@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../store/reducers/productSlice";
@@ -7,12 +7,13 @@ const AddProduct = () => {
   const { handleSubmit, register, reset } = useForm();
   const { products } = useSelector((state) => state.products);
   const dispatch = useDispatch();
-  const onSubmit = (data) => {
-    console.log(data);
 
-    dispatch(addProduct(data));
+  const onSubmit = (data) => {
+    const id = Date.now().toString();
+    dispatch(addProduct({ ...data, id }));
     reset();
   };
+
   return (
     <div className="p-10 h-screen">
       <h1 className="text-3xl">Add new product</h1>
@@ -25,6 +26,7 @@ const AddProduct = () => {
               className="border border-black"
               type="text"
               id="name"
+              required
             />
           </div>
 
@@ -34,6 +36,7 @@ const AddProduct = () => {
               {...register("category")}
               className="border border-black"
               id="category"
+              required
             >
               <option value="">--Please choose an option--</option>
               <option value="Snacks">Snacks</option>
@@ -50,6 +53,7 @@ const AddProduct = () => {
               className="border border-black"
               type="date"
               id="date"
+              required
             />
           </div>
 
@@ -60,6 +64,7 @@ const AddProduct = () => {
               className="border border-black"
               type="text"
               id="price"
+              required
             />
           </div>
         </div>
@@ -79,23 +84,27 @@ const AddProduct = () => {
       <div className="mt-10">
         <table className="border border-black w-full">
           <thead>
-            <tr className="border border-black text-center">All Products</tr>
+            <tr>
+              <th className="border border-black py-2" colSpan={5}>
+                All Products
+              </th>
+            </tr>
             <tr className="border-b border-black">
-              <td className="px-4 py-2">No</td>
-              <td className="px-4 py-2">Name</td>
-              <td className="px-4 py-2">Category</td>
-              <td className="px-4 py-2">Expiry Date</td>
-              <td className="px-4 py-2">Cost</td>
+              <th className="px-4 py-2">No</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Category</th>
+              <th className="px-4 py-2">Expiry Date</th>
+              <th className="px-4 py-2">Cost</th>
             </tr>
           </thead>
           <tbody>
             {products.map((p, index) => {
               return (
-                <tr key={index} className="border-b border-black">
-                  <td className="px-4 py-2">{index}</td>
+                <tr key={p.id} className="border-b border-black">
+                  <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">{p.name}</td>
                   <td className="px-4 py-2">{p.category}</td>
-                  <td className="px-4 py-2">{p.data}</td>
+                  <td className="px-4 py-2">{p.date}</td>
                   <td className="px-4 py-2">{p.price}</td>
                 </tr>
               );
